@@ -3,10 +3,12 @@ import dotenv from 'dotenv';
 import pkg from 'pg';
 const { Pool } = pkg;
 import userRoute from './routes/user.route.js';
+import authRoute from './routes/auth.route.js';
 
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 
 app.listen(3000, () => { console.log("Conectado à porta 3000"); });
 
@@ -30,6 +32,7 @@ async function connectToDatabase() {
 connectToDatabase();
 
 app.use("/api/user", userRoute);
+app.use('/api/auth', authRoute);
 
 app.get('/', (req, res)=>{
   res.json({
