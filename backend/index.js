@@ -4,10 +4,12 @@ import dotenv from 'dotenv';
 import pkg from 'pg';
 const { Pool } = pkg;
 import userRoute from './routes/user.route.js';
+import authRoute from './routes/auth.route.js';
 
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 
 // Inicia o servidor na porta 3000
 app.listen(3000, () => {
@@ -41,6 +43,7 @@ connectToDatabase();
 
 // Define as rotas da API
 app.use("/api/user", userRoute);
+app.use('/api/auth', authRoute);
 
 // Rota principal da API
 app.get('/', (req, res) => {
