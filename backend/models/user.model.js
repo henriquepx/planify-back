@@ -13,7 +13,7 @@ const User = sequelize.define('User', {
     allowNull: false,
     unique: true
   },
-  senha: {
+  user_password: {
     type: DataTypes.STRING,  // Representa VARCHAR no banco
     allowNull: false
   }
