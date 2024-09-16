@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import pkg from 'pg';
 const { Pool } = pkg;
@@ -10,16 +11,25 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.listen(3000, () => { console.log("Conectado à porta 3000"); });
+// Inicia o servidor na porta 3000
+app.listen(3000, () => {
+  console.log("Conectado à porta 3000");
+});
+
 
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD
+  password: process.env.DB_PASSWORD,
+  ssl: {
+    rejectUnauthorized: false, // Use com cuidado em produção
+  },
 });
 
+
+// Função para conectar ao banco de dados com lógica de reconexão
 async function connectToDatabase() {
   try {
     const client = await pool.connect();
@@ -32,11 +42,13 @@ async function connectToDatabase() {
 
 connectToDatabase();
 
+// Define as rotas da API
 app.use("/api/user", userRoute);
 app.use('/api/auth', authRoute);
 
-app.get('/', (req, res)=>{
+// Rota principal da API
+app.get('/', (req, res) => {
   res.json({
-    message :'API is working!',
+    message: 'API is working!',
   });
 });

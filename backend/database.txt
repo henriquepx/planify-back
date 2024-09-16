@@ -1,0 +1,3 @@
+schema: userdata
+tabela DM: userdata.DM_USER  //colunas: email, user_password
+tabela FT: userdata.FT_USER  //colunas: email, activity, activity_status
