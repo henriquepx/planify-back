@@ -29,6 +29,7 @@ async function connectToDatabase() {
     console.error('Erro ao conectar ao banco de dados:', err.message);
   }
 }
+
 connectToDatabase();
 
 app.use("/api/user", userRoute);
