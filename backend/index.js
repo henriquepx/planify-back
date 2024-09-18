@@ -44,11 +44,4 @@ connectToDatabase();
 
 // Define as rotas da API
 app.use("/api/user", userRoute);
-app.use('/api/auth', authRoute);
-
-// Rota principal da API
-app.get('/', (req, res) => {
-  res.json({
-    message: 'API is working!',
-  });
-});
+app.use('/api/auth', authRoute)

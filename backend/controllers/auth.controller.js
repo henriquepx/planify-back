@@ -3,10 +3,10 @@ import User from '../models/user.model.js';
 import bcryptjs from 'bcryptjs';
 
 export const signup = async (req, res) => {
-    const {username, email, password } = req.body;
+    const {email, user_password } = req.body;
     // criptografando a senha de usuário
-    const hashedPassword = bcryptjs.hashSync(password, 10);
-    const newUser = new User({username, email, password: hashedPassword});
+    const hashedPassword = bcryptjs.hashSync(user_password, 10);
+    const newUser = new User({email, user_password: hashedPassword});
     try{
         await newUser.save()
         res.status(201).json({message: "Usuário criado com sucesso!"})
