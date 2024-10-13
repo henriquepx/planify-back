@@ -5,11 +5,13 @@ import pkg from 'pg';
 const { Pool } = pkg;
 import userRoute from './routes/user.route.js';
 import authRoute from './routes/auth.route.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 // Inicia o servidor na porta 3000
 app.listen(3000, () => {
