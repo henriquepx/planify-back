@@ -38,3 +38,18 @@ export const updateUser =  async (req, res, next) => {
         next(error);
     }
 }
+
+//função deletar usuário
+
+
+export const deleteUser = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+        return next(errorHandler(401, 'Você pode deletar apenas a sua conta!'));
+    }
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.status(200).json('O usuário foi deletado...');
+    } catch (error){
+        next(error);
+    }
+}
