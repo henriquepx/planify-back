@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Inicia o servidor na porta 3000
+// Inicia o servidor na porta 3000!
 app.listen(3000, () => {
   console.log("Conectado à porta 3000");
 });
