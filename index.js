@@ -12,7 +12,6 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser());
 
 // Inicia o servidor na porta 3000!
 app.listen(3000, () => {
@@ -20,7 +19,7 @@ app.listen(3000, () => {
 });
 
 const corsOptions = {
-  origin: 'https://planify-front.vercel.app/',
+  origin: '*',
   optionsSuccessStatus: 204,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -28,6 +27,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(cookieParser());
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
