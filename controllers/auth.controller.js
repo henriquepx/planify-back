@@ -32,31 +32,45 @@ export const signin = async (req, res, next) => {
     try {
         // Procura o usuário pelo email
         const validUser = await User.findOne({ where: { email } });
-        if (!validUser) return next(errorHandler(404, 'User not found'));
+        if (!validUser) return next(errorHandler(404, 'Usuário não encontrado'));
+
+        // Verifica se a senha e o hash estão definidos antes da comparação
+        if (!user_password || !validUser.user_password) {
+            return next(errorHandler(400, 'Senha não fornecida ou não encontrada para o usuário.'));
+        }
 
         // Verifica a senha
         const validPassword = bcryptjs.compareSync(user_password, validUser.user_password);
-        if (!validPassword) return next(errorHandler(401, 'Wrong credentials'));
+        if (!validPassword) return next(errorHandler(401, 'Credenciais incorretas'));
+
+        // Verifica se JWT_SECRET está definido
+        if (!process.env.JWT_SECRET) {
+            return next(errorHandler(500, 'JWT_SECRET não está configurado.'));
+        }
 
         // Gera o token JWT
         const token = jwt.sign({ id: validUser.id }, process.env.JWT_SECRET, {
-            expiresIn: '1h', // Token expira em 1 hora, por exemplo
+            expiresIn: '1h',
         });
-        
-        // Remover a senha antes de enviar a resposta (opcional)
-        const { user_password: hashedPassword, ...rest } = validUser.dataValues; // Acessa diretamente 'dataValues'
+
+        // Remover a senha antes de enviar a resposta
+        if (!validUser || !validUser.dataValues) {
+            return next(errorHandler(500, 'Erro ao acessar os dados do usuário.'));
+        }
+        const { user_password: hashedPassword, ...rest } = validUser.dataValues;
 
         // Define o cookie com o token JWT
         res.cookie('access_token', token, {
-            httpOnly: true, // O cookie só pode ser acessado via HTTP, não por JavaScript
-            secure: process.env.NODE_ENV === 'production', // Envia cookie apenas em conexões HTTPS no ambiente de produção
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
         })
         .status(200)
-        .json({ message: "Login bem-sucedido", user: rest }); // Envia o usuário sem a senha
+        .json({ message: "Login bem-sucedido", user: rest });
     } catch (error) {
         next(error);
     }
 };
+
 
 export const google = async (req, res, next) => {
     try{
